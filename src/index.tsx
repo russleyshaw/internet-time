@@ -1,31 +1,15 @@
+import DevTools from "mobx-react-devtools";
 import * as React from "react";
 import { render } from "react-dom";
 
-import { useIntervalMemo } from "./hooks";
+import { App } from "./App";
 
-import "./styles.css";
+import "./style";
 
-function App() {
-    return (
-        <div>
-            <SwatchTime />
-        </div>
-    );
-}
-
-const SwatchTime = React.memo(() => {
-    const beats = useIntervalMemo(() => getInternetTime(), 100);
-    return (
-        <div className="App">
-            <div>@{beats.toFixed(2)}</div>
-        </div>
-    );
-});
-
-function getInternetTime(): number {
-    const sec = Date.now() / 1000 + 3600;
-    return (sec / 86.4) % 1000;
-}
-
-const rootElement = document.getElementById("root");
-render(<App />, rootElement);
+render(
+    <>
+        {process.env.NODE_ENV === "production" ? null : <DevTools />}
+        <App />
+    </>,
+    document.getElementById("main-app")
+);
