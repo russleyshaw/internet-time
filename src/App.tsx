@@ -14,14 +14,25 @@ export function App(): JSX.Element {
 
     function useBeats() {
         return useIntervalMemo(() => {
-            const b = getInternetTime().toFixed(2);
+            const b = getBeatsNow().toFixed(2);
             document.title = `@${b}`;
             return b;
-        }, 100);
+        }, BEATS_TO_SECONDS);
     }
 }
 
-function getInternetTime(): number {
-    const sec = Date.now() / 1000 + 3600;
-    return (sec / 86.4) % 1000;
+const BEATS_TO_SECONDS = 1 / 86.4;
+const MILLISECONDS_TO_SECONDS = 1 / 1000;
+const MINUTES_TO_SECONDS = 60;
+const HOURS_TO_SECONDS = MINUTES_TO_SECONDS * 60;
+
+function getBeatsNow(): number {
+    const d = new Date();
+    const totalSeconds =
+        d.getUTCMilliseconds() * MILLISECONDS_TO_SECONDS +
+        d.getUTCSeconds() +
+        d.getUTCMinutes() * MINUTES_TO_SECONDS +
+        d.getUTCHours() * HOURS_TO_SECONDS +
+        HOURS_TO_SECONDS;
+    return totalSeconds * BEATS_TO_SECONDS;
 }
